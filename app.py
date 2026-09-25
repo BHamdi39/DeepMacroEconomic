@@ -62,15 +62,25 @@ st.set_page_config(
     layout="wide",
 )
 
+if "__bk0" not in st.query_params:
+    st.query_params["__bk0"] = "started"
+
 inject_rtl()
 render_toolbar()
+
+if "__bk1" not in st.query_params:
+    st.query_params["__bk1"] = "toolbar"
 
 nav = st.navigation(build_nav(), position="sidebar", expanded=True)
 try:
     nav.run()
+    if "__bk2" not in st.query_params:
+        st.query_params["__bk2"] = "ran"
 except Exception:
     import traceback
 
+    if "__bk3" not in st.query_params:
+        st.query_params["__bk3"] = "err"
     st.error("تعذّر تشغيل الصفحة — يظهر أدناه التتبّع الكامل للخطأ.")
     st.code(traceback.format_exc())
 
