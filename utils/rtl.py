@@ -373,27 +373,48 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
     width: 290px !important;
     min-width: 290px !important;
     transition: transform 300ms ease;
+    z-index: 1000001 !important;
 }}
-/* عند الطيّ: يُخرج الشريط من تدفق التخطيط (fixed) حتى يملك المحتوى كامل العرض */
+/* عند الطيّ: يُخرج الشريط من تدفق التخطيط (fixed) ويُخفي كليًا حتى يملك المحتوى كامل العرض */
 [data-testid="stSidebar"][aria-expanded="false"] {{
     position: fixed !important;
     top: 0 !important;
     bottom: 0 !important;
-    right: 0 !important;
-    left: auto !important;
+    left: 100% !important;
+    right: auto !important;
     height: auto !important;
-    transform: translateX(calc(100% - 60px)) !important;
+    transform: none !important;
     box-shadow: none;
-    z-index: 120;
+    z-index: 1000001 !important;
 }}
 [data-testid="stSidebar"][aria-expanded="true"] {{
     transform: translateX(0) !important;
 }}
+/* رأس الشريط يُعلّى فوق "شريط التطبيق" (stHeader, z 999990) ليظل زرّ الطيّ قابلًا للنقر في الحالتين */
+[data-testid="stSidebarHeader"] {{
+    position: relative;
+    z-index: 1000000;
+}}
+/* زرّ الطيّ وسهامه مرئي وقابل للنقر دائمًا (Streamlit يُخفيه افتراضيًا عند التمديد) */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapseButton"] * {{
+    visibility: visible !important;
+}}
+/* عند الطيّ تبقى حبة طفو صغيرة تحمل زرّ الفتح فقط، بلا شريط يغطي حافة المحتوى */
 [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarHeader"] {{
-    position: absolute;
-    inset-block-start: 16px;
-    inset-inline-end: 0;
-    z-index: 1200;
+    position: fixed;
+    top: 16px;
+    right: 4px;
+    left: auto;
+    z-index: 1000000;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    padding: 0.2rem 0.15rem;
+}}
+[data-testid="stSidebar"][aria-expanded="false"] [data-testid="stLogoSpacer"] {{
+    display: none;
 }}
 [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarNav"],
 [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"],
