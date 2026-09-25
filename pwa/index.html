@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="الاقتصاد الكلي" />
+<meta name="application-name" content="مختبر الاقتصاد الكلي المعمّق" />
 <meta name="theme-color" content="#0E1117" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#0E1117" />
 <meta name="description" content="مختبر الاقتصاد الكلي المعمّق — تطبيق تعليمي تفاعلي يعمل محليًا" />
@@ -99,32 +100,64 @@
 </main>
 
 <script>
-  // الوضع الداكن هو الوضع الافتراضي للتطبيق الآن (يطابق أسلوب style.jpg).
-  // ⚠️ بعد نشر التطبيق على Streamlit Community Cloud، ضع رابط النشر في APP_URL:
-  //     e.g. APP_URL = "https://deepmacroeconomic.streamlit.app/?embed=true&toolbar_hide=true&theme=dark"
-  // واتركه فارغًا للتشغيل المحلي (localhost:8508) عبر run.ps1.
-  const APP_URL = ""; // ← ضع رابط النشر هنا بعد النشر
+  // أهداف التطبيق داخل الإطار:
+  //   CLOUD_URL — رابط النشر على Streamlit Community Cloud (يعمل على أي جهاز/نظام).
+  //   LOCAL_URL — المحاكي المحلي عبر run.ps1 (localhost:8508) لتطوير واختبار هذا الجهاز.
+  //
+  // الترتيب الافتراضي: السحابة أولًا ثم المحلي كسقوط أثناء التطوير.
+  // للفرض بالقوة على هدف معين:
+  //   http://localhost:8000/?app=local          ← المحاكي المحلي فقط
+  //   http://localhost:8000/?app=https://else/  ← هدف مخصص
+  const CLOUD_URL = "https://deepmacroeconomic.streamlit.app/?embed=true&toolbar_hide=true&theme=dark";
   const LOCAL_URL = "http://localhost:8508/?embed=true&toolbar_hide=true&theme=dark";
-  const TARGET_URL = APP_URL && APP_URL.startsWith("http") ? APP_URL : LOCAL_URL;
-  const APP_ORIGIN = new URL(TARGET_URL).origin;
+
+  function chosenTargets() {
+    const q = new URLSearchParams(location.search).get("app");
+    if (q === "local") return [LOCAL_URL];
+    if (q && q.startsWith("http")) return [q.split("?")[0] + (q.includes("?") ? "&" : "?") + "embed=true&toolbar_hide=true&theme=dark"];
+    return [CLOUD_URL, LOCAL_URL];
+  }
+  const CANDIDATES = chosenTargets();
   const frame = document.getElementById("app");
   const pill = document.getElementById("serverPill");
 
-  function checkServer() {
-    // no-cors: لا نحتاج قراءة الرد بل مجرد معرفة وصول الخادم (غير قابل للقراءة مقبول).
-    fetch(APP_ORIGIN + "/_stcore/health", { mode: "no-cors" })
-      .then(() => {
-        if (frame.src !== TARGET_URL) frame.src = TARGET_URL;
-        pill.textContent = "المحاكي يعمل ●";
-        document.body.classList.remove("loading");
-      })
-      .catch(() => {
-        pill.textContent = "⚠ المحاكي متوقف — شغّل run.ps1 (أو تأكد من نشر التطبيق)";
-        frame.src = "offline.html";
-      });
+  function health(url) {
+    return fetch(new URL("/_stcore/health", new URL(url).origin).href, { mode: "no-cors" })
+      .then(() => true)
+      .catch(() => false);
   }
-  checkServer();
-  setInterval(checkServer, 5000);
+
+  let active = null; // الهدف الحالي داخل الإطار؛ لا نبدّله إلا عند انقطاعه.
+
+  async function syncApp() {
+    const primary = CANDIDATES[0];
+    const local = CANDIDATES[1];
+
+    // الهدف الحالي ما زال حيًا؟ ← نبقى دون انقطاع للجلسة.
+    if (active && (await health(active))) {
+      document.body.classList.remove("loading");
+      return;
+    }
+    active = null;
+
+    if (await health(primary)) {
+      active = primary;
+      frame.src = primary;
+      pill.textContent = new URL(primary).hostname === "localhost"
+        ? "المحاكي المحلي يعمل ●"
+        : "التطبيق السحابي متصل ●";
+    } else if (local && (await health(local))) {
+      active = local;
+      frame.src = local;
+      pill.textContent = "المحاكي المحلي يعمل ●";
+    } else {
+      pill.textContent = "⚠ التطبيق غير متاح — شغّل run.ps1 أو تأكد من النشر السحابي";
+      frame.src = "offline.html";
+    }
+    document.body.classList.remove("loading");
+  }
+  syncApp();
+  setInterval(syncApp, 8000);
 
   // حالة الشبكة
   const netPill = document.getElementById("netPill");

@@ -1,5 +1,5 @@
 /* خدمة العامل: قشرة أولية + سقوط للصفحة الأساسية. الخطوط محزّمة محليًا. */
-const VERSION = "macro2026-v3";
+const VERSION = "macro2026-v4";
 const SHELL = [
   "./",
   "./index.html",

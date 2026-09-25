@@ -22,10 +22,10 @@
 <body>
   <div class="box">
     <div style="font-size:3rem">🔌</div>
-    <h1>أنت غير متصل</h1>
-    <p>التطبيق يعمل محليًا ويحتاج تشغيل المحاكي أولًا.<br>
-       شغّل <code>run.ps1</code> ثم أعد فتح التطبيق.</p>
-    <a href="./">إعادة المحاولة</a>
+    <h1>التطبيق غير متوفر حاليًا</h1>
+    <p>خادم التطبيق لا يستجيب. تأكد من تشغيل النشر السحابي على Streamlit<br>
+       أو شغّل المحاكي محليًا عبر <code>run.ps1</code> ثم أعد المحاولة.</p>
+    <button onclick="window.parent.syncApp && window.parent.syncApp(); location.reload();" style="margin-top:14px;background:#5FD3C4;color:#0A0F14;border:0;border-radius:10px;padding:11px 26px;font-weight:700;font-family:inherit;font-size:.95rem;cursor:pointer">إعادة المحاولة</button>
   </div>
 </body>
 </html>
