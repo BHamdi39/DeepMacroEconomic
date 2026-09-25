@@ -26,16 +26,27 @@ def _shuffle_options(page_key: str, idx: int, options: list[str],
     return shuffled, order.index(answer_id)
 
 
+def visited_set() -> set:
+    """قارئ متسامح لـ visited_pages: يقبل set أو list (إعادة هيدرة JSON)."""
+    raw = st.session_state.get("visited_pages")
+    if isinstance(raw, (list, set)):
+        return set(raw)
+    return set()
+
+
 def mark_visited(page_key: str) -> None:
-    """يسجّل زيارة المستخدم للصفحة الحالية لتتبّع التقدّم."""
-    visited = st.session_state.setdefault("visited_pages", set())
-    if isinstance(visited, set):
-        visited.add(page_key)
-        st.session_state["visited_pages"] = visited
+    """يسجّل زيارة المستخدم للصفحة الحالية لتتبّع التقدّم.
+
+    يُخزَّن كقائمة (JSON-safe) حتى لا تتحطّم القيم عند إعادة الهيدرة
+    في بيئات التشغيل السحابية التي تُعمّم حالة الجلسة بصيغ JSON-safe.
+    """
+    visited = visited_set()
+    visited.add(page_key)
+    st.session_state["visited_pages"] = sorted(visited)
 
 
 def visited_count() -> int:
-    return len(st.session_state.get("visited_pages", set()))
+    return len(visited_set())
 
 
 ALL_PAGES: dict[str, str] = {}

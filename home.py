@@ -5,7 +5,7 @@ import streamlit as st
 
 from utils.modules import MODULES, module_visited
 from utils.rtl import inject_rtl
-from utils.ui import flow, progress_block, visited_count
+from utils.ui import flow, progress_block, visited_count, visited_set
 
 TOTAL_LESSONS = 25
 
@@ -51,7 +51,7 @@ st.markdown(
 flow(["الفكرة", "الإطار الرياضي", "المحاكي التفاعلي", "اختبر فهمك"])
 
 # ---- بطاقات القياس (حالة، لا زخرفة) ----
-visited = st.session_state.get("visited_pages", set())
+visited = visited_set()
 c1, c2, c3, c4 = st.columns(4, gap="small")
 c1.metric("الوحدات", "7", help="عدد الوحدات في المقرر")
 c2.metric("الدروس", TOTAL_LESSONS, help="إجمالي الدروس التفاعلية")

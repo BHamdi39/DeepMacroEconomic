@@ -29,7 +29,10 @@ def _lesson_key(path: str) -> str | None:
 
 
 def _visited_set() -> set:
-    return st.session_state.get("visited_pages", set())
+    raw = st.session_state.get("visited_pages")
+    if isinstance(raw, (list, set)):
+        return set(raw)
+    return set()
 
 
 def build_nav() -> dict:
@@ -63,6 +66,12 @@ inject_rtl()
 render_toolbar()
 
 nav = st.navigation(build_nav(), position="sidebar", expanded=True)
-nav.run()
+try:
+    nav.run()
+except Exception:
+    import traceback
+
+    st.error("تعذّر تشغيل الصفحة — يظهر أدناه التتبّع الكامل للخطأ.")
+    st.code(traceback.format_exc())
 
 render_footer()

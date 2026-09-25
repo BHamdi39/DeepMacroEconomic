@@ -93,5 +93,6 @@ MODULES: list[tuple[str, str, str, int, list[tuple[str, str, str]]]] = [
 
 def module_visited(prefix: str, total: int) -> int:
     """عدد الدروس المزارة داخل الوحدة التي تبدأ مفاتيحها بالبادئة."""
-    visited = st.session_state.get("visited_pages", set())
+    raw = st.session_state.get("visited_pages")
+    visited = set(raw) if isinstance(raw, (list, set)) else set()
     return sum(1 for k in visited if str(k).startswith(prefix))
