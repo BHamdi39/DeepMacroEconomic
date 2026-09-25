@@ -374,9 +374,17 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
     min-width: 290px !important;
     transition: transform 300ms ease;
 }}
+/* عند الطيّ: يُخرج الشريط من تدفق التخطيط (fixed) حتى يملك المحتوى كامل العرض */
 [data-testid="stSidebar"][aria-expanded="false"] {{
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    height: auto !important;
     transform: translateX(calc(100% - 60px)) !important;
     box-shadow: none;
+    z-index: 120;
 }}
 [data-testid="stSidebar"][aria-expanded="true"] {{
     transform: translateX(0) !important;
@@ -385,7 +393,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
     position: absolute;
     inset-block-start: 16px;
     inset-inline-end: 0;
-    z-index: 20;
+    z-index: 1200;
 }}
 [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarNav"],
 [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarUserContent"],
