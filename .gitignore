@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Streamlit runtime artifacts
+_st.pid
+_pwa.pid
+*.log
+
+# Local tooling / agent folders (dev only)
+.opencode/
+openspec/
+.qodo/
+.specify/
+
+# Local debug screenshots (dev only)
+_dbg_top.png
+_issue_sidebar.png
+_plan_shot.png
+_tab_collapsed.png
+
+# Design reference (not needed at runtime)
+style.jpg
+
+# Source reference material — copyrighted scanned textbooks (not part of the app)
+الاقتصاد الكلي المعمق/
+
+# Internal build notes / prompt chains
+سلسلة_البرومبتات_لبناء_تطبيق_الاقتصاد_الكلي_المعمق.md
+
+# Temp / misc
+New Text Document.txt
+.DS_Store
+Thumbs.db
+
+# Secrets (defensive — none committed today)
+.streamlit/secrets.toml
