@@ -290,6 +290,12 @@ code, pre, samp, kbd {{
 mjx-container, .MathJax, .katex, [data-testid="stMarkdown"] mjx-container {{
     direction: ltr; unicode-bidi: isolate;
 }}
+/* حارس التفيض: المعادلات الطويلة تتمرّر أفقياً داخل الصندوق بدل كسر الصفحة */
+[data-testid="stLatex"], .stLatex, .math-frame {{
+    overflow-x: auto;
+    max-width: 100%;
+    overscroll-behavior-x: contain;
+}}
 .ltr, .num {{
     direction: ltr; unicode-bidi: isolate;
     font-family: var(--font-lat);
@@ -702,6 +708,47 @@ div[data-testid="stVerticalBlockBorderWrapper"] {{
     .topbar {{ grid-template-columns: 1fr; text-align: center; }}
     .page-title {{ white-space: normal; }}
     .topbar-left, .topbar-right, .topbar-center {{ justify-content: center; }}
+}}
+
+/* ====== الجوال (<768px): قائمة جانبية بالنظام الأصلي (هامبورغر) + تخطيط مضغوط ====== */
+@media (max-width: 767px) {{
+    /* نخفي حبة الطفو فنعتمد هامبورغر Streamlit الأصلي (يخفيه إخفاء stToolbar) */
+    [data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarHeader"] {{
+        display: none !important;
+    }}
+    [data-testid="stToolbar"] [data-testid="stExpandSidebarButton"],
+    [data-testid="stToolbar"] [data-testid="stExpandSidebarButton"] [data-testid="stIconMaterial"] {{
+        visibility: visible !important;
+    }}
+    /* درج منبثق أوسع يغطي معظم الشاشة */
+    [data-testid="stSidebar"][aria-expanded="true"] {{
+        width: min(88vw, 320px) !important;
+        min-width: min(88vw, 320px) !important;
+    }}
+    /* وسادات أصغر لصناديق المحتوى */
+    .top-shell {{ padding: 0.6rem 0.7rem 0.5rem; }}
+    .lesson-shell {{ padding: 0.7rem 0.75rem 0.55rem; }}
+    .unit-card {{ padding: 0.8rem 0.85rem 0.7rem; }}
+    .math-frame {{ padding: 0.45rem 0.6rem; }}
+    .idea-card {{ padding: 0.7rem 0.85rem; }}
+    .hero-panel {{ padding: 0.9rem 0.7rem 0.7rem; }}
+    /* صفوف رأس البطاقات تلتفّ فلا تتزاحم الشارة مع العنوان */
+    .unit-card-head, .lesson-topbar {{ flex-wrap: wrap; }}
+    .unit-card-head {{ gap: 0.4rem; }}
+    .topbar {{ gap: 0.4rem; }}
+    .badge-panel {{ gap: 0.4rem; }}
+    .badge {{ min-width: 100px; }}
+    /* جداول عريضة تتمرّر أفقياً */
+    [data-testid="stDataFrame"] {{ overflow-x: auto; }}
+}}
+
+@media (max-width: 480px) {{
+    :root {{
+        --t-h1: 1.85rem; --t-h2: 1.3rem; --t-h3: 1.05rem; --t-body: 0.95rem;
+    }}
+    .lesson-title {{ font-size: clamp(1.7rem, 7vw, 3rem); }}
+    [data-testid="stMainBlockContainer"] > div:first-child {{ padding-inline: 0.5rem; }}
+    [data-testid="stSidebar"] a {{ padding-block: 0.62rem !important; }}
 }}
 </style>
 """

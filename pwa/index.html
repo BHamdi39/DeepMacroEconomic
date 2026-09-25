@@ -3,12 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="الاقتصاد الكلي" />
 <meta name="theme-color" content="#0E1117" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#0E1117" />
 <meta name="description" content="مختبر الاقتصاد الكلي المعمّق — تطبيق تعليمي تفاعلي يعمل محليًا" />
 <title>مختبر الاقتصاد الكلي المعمّق</title>
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="icon" href="./icon-192.png" />
+<link rel="apple-touch-icon" href="./icon-192.png" />
 <link rel="stylesheet" href="./fonts.css" />
 <style>
   :root { --bg:#0E1117; --surface:#161B22; --border:#2A3038; --ink:#F5F6F7; --muted:#9CA3AF; --accent:#5FD3C4; }
@@ -21,13 +26,15 @@
   header {
     background: linear-gradient(135deg, #15262E, #0E1117);
     color: #fff; display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 18px; border-bottom: 1px solid var(--border);
+    padding: 10px 18px; padding-top: max(10px, env(safe-area-inset-top));
+    border-bottom: 1px solid var(--border);
     box-shadow: 0 2px 10px rgba(0,0,0,.35); z-index: 10;
   }
-  header .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.02rem; }
+  header .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.02rem; min-width: 0; }
+  header .brand span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   header .brand bdi { color: var(--accent); }
-  header img { width: 34px; height: 34px; border-radius: 8px; }
-  header .actions { display: flex; gap: 8px; align-items: center; }
+  header img { width: 34px; height: 34px; border-radius: 8px; flex: none; }
+  header .actions { display: flex; gap: 8px; align-items: center; flex: none; }
   .install-btn {
     display: none; background: var(--accent); color: #0A0F14; border: none;
     border-radius: 8px; padding: 7px 14px; font-weight: 700; font-size: .9rem;
@@ -52,6 +59,19 @@
     background: var(--bg); color: var(--muted); font-size: 1rem; flex-direction: column; gap: 10px;
   }
   body.loading .busy { display: flex; }
+  @media (max-width: 480px) {
+    header { padding: 8px 10px; padding-top: max(8px, env(safe-area-inset-top)); }
+    header .brand { font-size: .88rem; gap: 7px; }
+    header img { width: 30px; height: 30px; }
+    .install-btn { padding: 6px 10px; font-size: .8rem; }
+    .server-pill, .net-pill { font-size: .68rem; padding: 3px 8px; }
+  }
+  @media (max-width: 380px) {
+    .server-pill, .net-pill { display: none; }
+  }
+  @media (max-width: 800px) {
+    .net-pill, .server-pill { white-space: nowrap; }
+  }
 </style>
 </head>
 <body class="loading">
